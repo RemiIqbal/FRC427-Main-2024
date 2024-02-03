@@ -1,10 +1,14 @@
 package frc.robot.subsystems.leds;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm.ArmControlState;
 import frc.robot.subsystems.leds.patterns.LEDPattern;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -26,6 +30,14 @@ public class Led extends SubsystemBase {
     private LEDPattern pattern;
 
     private AddressableLEDBuffer buffer;
+
+    public boolean isMovingToAmp = false; 
+    public boolean isMovingToSpeaker = false; 
+    public boolean isShooting = false; 
+    public boolean isIntaking = false; 
+    public boolean isShootingToAmp = false;
+    public boolean isShootingToSpeaker = false;
+
 
     private Timer timer = new Timer();
 
@@ -80,6 +92,25 @@ public class Led extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        LEDPattern decidedPattern = LEDPattern.kEmpty; 
+
+        // lower priorities
+        if (DriverStation.isEnabled()) decidedPattern = Constants.LEDs.Patterns.kEnabled; 
+        if (DriverStation.isDisabled()) decidedPattern = Constants.LEDs.Patterns.kDisabled; 
+       
+        if (this.isMovingToAmp || this.isMovingToSpeaker) decidedPattern = Constants.LEDs.Patterns.kMoving;
+        if (this.isShooting) decidedPattern = Constants.LEDs.Patterns.kShootAnywhere;
+        if (this.isIntaking) decidedPattern = Constants.LEDs.Patterns.kIntake;
+        if (Arm.getInstance().getArmControlState() == ArmControlState.TRAVEL) decidedPattern = Constants.LEDs.Patterns.kArmMoving;
+        if (Arm.getInstance().getArmControlState() == ArmControlState.AMP) decidedPattern = Constants.LEDs.Patterns.kArmAtAmp;
+        if (Arm.getInstance().getArmControlState() == ArmControlState.SPEAKER) decidedPattern = Constants.LEDs.Patterns.kArmAtSpeaker;
+        if (Arm.getInstance().getArmControlState() == ArmControlState.GROUND) decidedPattern = Constants.LEDs.Patterns.kArmAtGround;
+        if (this.isShootingToAmp) decidedPattern = Constants.LEDs.Patterns.kShootAmp;
+        if  (this.isShootingToSpeaker) decidedPattern = Constants.LEDs.Patterns.kShootSpeaker;
+
+        setPattern(decidedPattern);
+
         //Constantly updates leds with respect to time
         for (int i = 0; i < ledStrips.size(); i++) {
             ledStrips.get(i).update(timer.get());

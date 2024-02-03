@@ -275,6 +275,16 @@ public final class Constants {
       public static final LEDPattern kAllianceBlue = new SolidLEDPattern(Color.kBlue);
       public static final LEDPattern kEnabled = new TriFlashPattern(Color.kRed, Color.kYellow, Color.kGreen);
       public static final LEDPattern kDisabled = new TriFlashPattern(Color.kGreen, Color.kYellow, Color.kRed);
+      public static final LEDPattern kMoving = new FadeLEDPattern(1,Color.kYellow, Color.kWhite);
+      public static final LEDPattern kFail = new FadeLEDPattern(1,Color.kRed, Color.kYellow);
+      public static final LEDPattern kIntake = new FadeLEDPattern(1,Color.kBlue, Color.kGreen);
+      public static final LEDPattern kShootAnywhere = new SolidLEDPattern(Color.kAliceBlue);
+      public static final LEDPattern kArmMoving = new SolidLEDPattern(Color.kOrange);
+      public static final LEDPattern kArmAtAmp = new SolidLEDPattern(Color.kPink);
+      public static final LEDPattern kArmAtSpeaker = new SolidLEDPattern(Color.kYellow);
+      public static final LEDPattern kArmAtGround = new SolidLEDPattern(Color.kDarkGreen);
+      public static final LEDPattern kShootAmp = new SolidLEDPattern(Color.kBlue);
+      public static final LEDPattern kShootSpeaker = new SolidLEDPattern(Color.kBlue);
 
     }
 
