@@ -11,7 +11,8 @@ import frc.robot.util.IOUtils;
 
 public class Hang extends SubsystemBase {
 
-    private static Hang instance = new Hang();
+    private static Hang instance; 
+    //  = new Hang();
 
     public static Hang getInstance() {
         return instance; 

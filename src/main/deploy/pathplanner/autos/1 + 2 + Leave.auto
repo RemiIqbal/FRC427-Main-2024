@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.25,
+      "y": 5.4761064972366915
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker to Note 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note to Speaker 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker 2 to Note 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note 3 to Speaker 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test Auto 1 meter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "3 piece auto",
+  "choreoAuto": false
+}

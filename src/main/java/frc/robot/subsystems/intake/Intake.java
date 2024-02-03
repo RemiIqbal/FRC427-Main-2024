@@ -20,7 +20,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-    private static Intake instance = new Intake();
+    private static Intake instance; 
+    //  = new Intake();
 
     public static Intake getInstance() {
         return instance; 

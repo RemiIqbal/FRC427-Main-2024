@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.045563691748831,
-        "y": 6.877873700850674
+        "x": 2.2007266069669984,
+        "y": 6.481023488362766
       },
       "isLocked": false,
-      "linkedName": "Note 1"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6634748038091614,
-        "y": 6.600687689894831
+        "x": 1.25,
+        "y": 5.4761064972366915
       },
       "prevControl": {
-        "x": 1.205083485409892,
-        "y": 6.69618791344698
+        "x": 1.4909002249082197,
+        "y": 5.76090976743357
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Speaker 1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -50,18 +50,18 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 90.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 60.0,
-    "rotateFast": true
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Speaker Note",
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

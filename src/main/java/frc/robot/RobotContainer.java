@@ -21,6 +21,7 @@ import frc.robot.util.DriverController;
 import frc.robot.util.DriverController.Mode;
 import frc.robot.subsystems.leds.Led;
 import frc.robot.subsystems.leds.patterns.LEDPattern;
+import frc.robot.subsystems.limelight.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,19 +37,19 @@ public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
 
   // intake of the bot
-  private final Intake intake = Intake.getInstance(); 
+  // private final Intake intake = Intake.getInstance(); 
 
   // leds!
-  private final Led led = Led.getInstance(); 
+  // private final Led led = Led.getInstance(); 
 
   // limelight subsystem of robot
-  // private final Limelight limelight = Limelight.getInstance(); 
+  private final Limelight limelight = Limelight.getInstance(); 
 
   // hang mechanism of robot
-  private final Hang hang = Hang.getInstance();
+  // private final Hang hang = Hang.getInstance();
   
   // arm of the robot
-  private final Arm arm = Arm.getInstance();
+  // private final Arm arm = Arm.getInstance();
   
   private SendableChooser<LEDPattern> patterns = new SendableChooser<>();
   
