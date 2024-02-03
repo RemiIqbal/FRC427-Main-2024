@@ -5,7 +5,7 @@
       "x": 0.6884877930157377,
       "y": 4.4852797475010595
     },
-    "rotation": -65.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Speaker to Note 3"
@@ -39,6 +45,12 @@
           "type": "path",
           "data": {
             "pathName": "Middle Note 4th going back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
           }
         }
       ]

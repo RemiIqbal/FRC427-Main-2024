@@ -5,11 +5,16 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drivetrain.SwerveModuleConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -38,7 +43,7 @@ public final class Constants {
   public static class DrivetrainConstants {
     // Swerve IDs
     public static SwerveModuleConfig frontLeft = new SwerveModuleConfig("FrontLeft", 1, 2, 12, 0.44921875, true, true, SensorDirectionValue.CounterClockwise_Positive); 
-    public static SwerveModuleConfig frontRight = new SwerveModuleConfig("FrontRight", 7, 8, 9, -0.160889, false, false, SensorDirectionValue.CounterClockwise_Positive); 
+    public static SwerveModuleConfig frontRight = new SwerveModuleConfig("FrontRight", 7, 8, 9, -0.160889, true, true, SensorDirectionValue.CounterClockwise_Positive); 
     public static SwerveModuleConfig backLeft = new SwerveModuleConfig("BackLeft", 3, 4, 10, 0.216797, true, true, SensorDirectionValue.CounterClockwise_Positive); 
     public static SwerveModuleConfig backRight = new SwerveModuleConfig("BackRight", 5, 6, 11, 0.167236, true, true, SensorDirectionValue.CounterClockwise_Positive); 
 
@@ -54,8 +59,8 @@ public final class Constants {
     public static final double kDegreesPerSecondPerRPM = kDegreesPerRot / 60; // velocity conversion factor of the turn encoder 
 
     // Drivebase
-    public static final double kTrackWidthMeters = Units.inchesToMeters(23.0); // horizontal dist between wheels
-    public static final double kWheelBaseMeters = Units.inchesToMeters(23.0); // vertical dist between wheels
+    public static final double kTrackWidthMeters = Units.inchesToMeters(20.75); // horizontal dist between wheels
+    public static final double kWheelBaseMeters = Units.inchesToMeters(22.75); // vertical dist between wheels
 
     public static final double kDriveBaseRadius = Math.hypot(kTrackWidthMeters, kWheelBaseMeters) / 2; 
 
@@ -77,10 +82,10 @@ public final class Constants {
     // TODO: tune these
     public static double kMaxSpeedMetersPerSecond = 2.0; // max velocity (no turning) of robot; may tune to be a fraction of the attainable module speed
     public static double kMaxSlowSpeedMetersPerSecond = 1.0; 
-    public static final double kMaxAccelerationMetersPerSecondSquared = kMaxSpeedMetersPerSecond / 1.0; // max acceleration of robot (accelerate to max speed in 1 second)
+    public static final double kMaxAccelerationMetersPerSecondSquared = kMaxSpeedMetersPerSecond / 0.2; // max acceleration of robot (accelerate to max speed in 1 second)
     public static double kMaxRotationRadPerSecond = 3.14; // max rotation speed of the robot
     public static final double kMaxSlowRotationRadPerSecond = Math.PI / 2; 
-    public static final double kMaxRotationAccelerationRadPerSecondSquared = Math.PI; // max angular acceleration of robot
+    public static final double kMaxRotationAccelerationRadPerSecondSquared = kMaxRotationRadPerSecond / 0.2; // max angular acceleration of robot
 
     // feedforward values (NO NEED to tune these)
     public static final double ksVolts = 0; 
@@ -88,16 +93,16 @@ public final class Constants {
     public static final double kaVoltSecondsSquaredPerMeter = 0; 
 
     // drive speed PID values for a swerve module
-    public static final double kModuleDrive_P = 6.8901E-06; 
+    public static final double kModuleDrive_P = 0.0006890099939482752; 
     public static final double kModuleDrive_I = 0; 
     public static final double kModuleDrive_D = 0; 
-    public static final double kModuleDrive_FF = 0.31;
+    public static final double kModuleDrive_FF = 0.2;
 
     // found from sysid for one of the turn modules or tune by yourself
     // turn PID values for a swerve module
-    public static final double kModuleTurn_P = 0.01; 
+    public static final double kModuleTurn_P = 0.0081; 
     public static final double kModuleTurn_I = 0; 
-    public static final double kModuleTurn_D = 0.0001; 
+    public static final double kModuleTurn_D = 0.00032; 
 
     // turn in place PID for the whole robot
     public static final double kTurn_P = 0.054; 
@@ -136,6 +141,9 @@ public final class Constants {
     public static final double kMaxVelocityMetersPerSecond = 1; 
     public static final double kMaxAccelerationMetersPerSecondSquared = 1; 
 
+    public static final double kMaxAngularVelocityRadiansPerSecond = Math.PI; 
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 2; 
+
     public static final double kMaxCentripetalAcceleration = 0.8; 
   }
 
@@ -169,37 +177,49 @@ public final class Constants {
     public static final int kArmMotorRightId = 14;
     public static final int kArmMotorLeftId = 13;
 
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-
-    // calculate using reca.lc
-    // CoM distance: 21.77 in
-    // Arm mass: 20.755 lbs
-    public static final double kS = 0; 
-    public static final double kG = 0; // 0.79 V
-    public static final double kV = 0; // 1.95 V*s/rad
-    public static final double kA = 0; // 0.06 V*s^2/rad
-
     public static final boolean kRightMotorInverted = false;
     public static final boolean kLeftMotorInverted = false; 
 
     public static final int kMotorCurrentLimit = 40;
     
-    public static final float kSoftLimitForward = 100;
-    public static final float kSoftLimitReverse = 0;
+    public static final float kForwardSoftLimit = 100;
+    public static final double kReverseSoftLimit = 0; 
 
     public static final double kPositionConversionFactor = 360;
+
     // velocity = position / 60
     public static final double kVelocityConversionFactor = 360 / 60.0; 
     public static final double kTolerance = 0;
-    
+
     public static final double kGroundPosition = 0;
     public static final double kTravelPosition = 0;
     public static final double kAmpPosition = 0;
     public static final double kSpeakerPosition = 0;
 
     public static final double kTravelSpeed = 0;
+
+
+    // TODO: tune arm pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    // torque from gas spring:
+    // https://www.desmos.com/calculator/3mcdsjeubz
+    public static final double kGravityFF = 0;
+    public static final double kSpringFF = 0;
+
+    /*  
+    // calculate using reca.lc
+    // CoM distance: 21.77 in
+    // Arm mass: 20.755 lbs
+    
+    public static final double kS = 0; 
+    public static final double kG = 0; // 0.79 V
+    public static final double kV = 0; // 1.95 V*s/rad
+    public static final double kA = 0; // 0.06 V*s^2/rad
+    */
+
   }
 
   public static class HangConstants {
@@ -225,6 +245,7 @@ public final class Constants {
     public static final double kRotationStdDevCoefficient = 1;
     public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(); 
     public static final double limelightZHeight = 0; // TODO: Fix this
+    public static final double kMaxAccuracyRange = 1000;
 
     static {
       kAprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
@@ -254,8 +275,28 @@ public final class Constants {
       public static final LEDPattern kAllianceBlue = new SolidLEDPattern(Color.kBlue);
       public static final LEDPattern kEnabled = new TriFlashPattern(Color.kRed, Color.kYellow, Color.kGreen);
       public static final LEDPattern kDisabled = new TriFlashPattern(Color.kGreen, Color.kYellow, Color.kRed);
+      public static final LEDPattern kMoving = new FadeLEDPattern(1,Color.kYellow, Color.kWhite);
+      public static final LEDPattern kFail = new FadeLEDPattern(1,Color.kRed, Color.kYellow);
+      public static final LEDPattern kIntake = new FadeLEDPattern(1,Color.kBlue, Color.kGreen);
+      public static final LEDPattern kShootAnywhere = new SolidLEDPattern(Color.kAliceBlue);
+      public static final LEDPattern kArmMoving = new SolidLEDPattern(Color.kOrange);
+      public static final LEDPattern kArmAtAmp = new SolidLEDPattern(Color.kPink);
+      public static final LEDPattern kArmAtSpeaker = new SolidLEDPattern(Color.kYellow);
+      public static final LEDPattern kArmAtGround = new SolidLEDPattern(Color.kDarkGreen);
+      public static final LEDPattern kShootAmp = new SolidLEDPattern(Color.kBlue);
+      public static final LEDPattern kShootSpeaker = new SolidLEDPattern(Color.kBlue);
 
     }
 
   }
+public static final class PathFollower {
+  public static final Pose2d speakerBlue1 = new Pose2d(0.66, 6.60, Rotation2d.fromDegrees(60));
+  public static final Pose2d speakerBlue2 = new Pose2d(1.25, 5.48, Rotation2d.fromDegrees(0));
+  public static final Pose2d speakerBlue3 = new Pose2d(0.69, 4.49, Rotation2d.fromDegrees(-60)); // degrees -60
+  public static final Pose2d speakerRed1 = new Pose2d(15.83, 6.58, Rotation2d.fromDegrees(120));
+  public static final Pose2d speakerRed2 = new Pose2d(15.29, 5.48, Rotation2d.fromDegrees(180));
+  public static final Pose2d speakerRed3 = new Pose2d(15.83, 4.51, Rotation2d.fromDegrees(-120)); // degrees -120
+
+}
+  
 }

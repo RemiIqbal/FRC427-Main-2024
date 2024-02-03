@@ -21,7 +21,6 @@ public class TuneManualVelocity extends Command {
 
     public void execute() {
         m_arm.setSpeed(IOUtils.get("manual speed"));
-        IOUtils.set("current angle", m_arm.getAngle());
 
     }
 

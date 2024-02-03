@@ -9,7 +9,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.AutomationCommands;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.commands.GoToSpeaker;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.commands.OuttakeToSpeaker;
 
 // class to store, set up, and choose autos
 public class AutoPicker {
@@ -57,7 +63,15 @@ public class AutoPicker {
 
     public void registerCommands() {
         // eg. NamedCommands.registerCommand("intake_cube", new IntakeForTime(intake, 1, 2)); 
+        // NamedCommands.registerCommand("GoToSpeaker", new GoToSpeaker(Arm.getInstance()));
+        // NamedCommands.registerCommand("IntakeGround", AutomationCommands.autoIntakeCommand());
+        // NamedCommands.registerCommand("ShootSpeaker", new OuttakeToSpeaker(Intake.getInstance(), 1,1));
+        // NamedCommands.registerCommand("ShootOut", new OuttakeToSpeaker(Intake.getInstance(),0.5,1));
 
+        NamedCommands.registerCommand("GoToSpeaker", new PrintCommand("Going to Speaker"));
+        NamedCommands.registerCommand("IntakeGround", new PrintCommand("Intaking from ground!"));
+        NamedCommands.registerCommand("ShootSpeaker", new PrintCommand("shooting to speaker!!"));
+        NamedCommands.registerCommand("ShootOut", new PrintCommand("Shooting out to nowhere!!!"));
     }
 
     // gets the currently selected auto

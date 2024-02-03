@@ -21,7 +21,7 @@ public class SwerveTurnPIDController extends PIDController {
         this.encoder = encoder; 
 
         // allow the motor to rotate past 1 rotation and not break
-        enableContinuousInput(0, 360);
+        enableContinuousInput(-180, 180);
     }
 
     private Rotation2d getRotation() {

@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Speaker to Note 2"
@@ -32,24 +38,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Note to Middle 2nd"
+            "pathName": "Speaker 2 to Note 3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Note 2nd going back"
+            "pathName": "Note 3 to Speaker 2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootOut"
+            "name": "ShootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker 2 to Note 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note 1 to Speaker 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
           }
         }
       ]
     }
   },
-  "folder": "Two Piece Middle Fling",
+  "folder": "3 piece auto",
   "choreoAuto": false
 }

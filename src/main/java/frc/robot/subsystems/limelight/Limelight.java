@@ -7,16 +7,24 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import frc.robot.Constants;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Limelight extends SubsystemBase{
+public class Limelight extends SubsystemBase {
+
+    
+    private static Limelight instance = new Limelight(Drivetrain.getInstance());
+
+    public static Limelight getInstance() {
+        return instance; 
+    }
 
     private static NetworkTable limelightNT = NetworkTableInstance.getDefault().getTable("limelight");
     private double limelightX;
@@ -33,7 +41,7 @@ public class Limelight extends SubsystemBase{
     private double[] botPoseValues;
 
     // Creates a new limelight object
-    public Limelight(Drivetrain drivetrain) {
+    private Limelight(Drivetrain drivetrain) {
         limelightNT = NetworkTableInstance.getDefault().getTable("limelight");
         this.drivetrain = drivetrain;
     }
@@ -44,7 +52,7 @@ public class Limelight extends SubsystemBase{
         NetworkTableEntry botPose = limelightNT.getEntry("botpose_wpiblue");
 
         // Reads values periodically
-        botPoseValues = botPose.getDoubleArray(new double[6]); // Make sure these are the right indices
+        botPoseValues = botPose.getDoubleArray(new double[7]); // Make sure these are the right indices
 
         // Converts these values into variables
         limelightX = botPoseValues[0];
@@ -69,13 +77,13 @@ public class Limelight extends SubsystemBase{
         SmartDashboard.putNumber("LimelightTargetArea", limelightTargetArea);
         SmartDashboard.putNumber("LimelightTargetX", limelightTargetX);
         SmartDashboard.putNumber("LimelightTargetY", limelightTargetY);
-        SmartDashboard.putNumber("LimelightDistanceToTarget", getDistanceToAprilTag());
+        // SmartDashboard.putNumber("LimelightDistanceToTarget", getDistanceToAprilTag());
         SmartDashboard.putNumber("LimelightNearestAprilTag", getClosestAprilTagID());
         SmartDashboard.putNumber("LimelightNearestAprilTagPositionX", getAprilTagPos(getClosestAprilTagID()).getX());
         SmartDashboard.putNumber("LimelightNearestAprilTagPositionY", getAprilTagPos(getClosestAprilTagID()).getY());
         SmartDashboard.putNumber("LimelightNearestAprilTagPositionZ", getAprilTagPos(getClosestAprilTagID()).getZ());
 
-        addVisionFromDrivetrain();
+        if (getAprilTagPos(getClosestAprilTagID()) != null) addVisionFromDrivetrain();
     }
 
     // Calculates the stand deviation of the distance of the object
@@ -93,12 +101,13 @@ public class Limelight extends SubsystemBase{
 
     // Returns the pose3d of the closest april tag
     private Pose3d getAprilTagPos(int aprilTagID) {
-        return Constants.Vision.kAprilTagFieldLayout.getTagPose(aprilTagID).orElse(null);
+        return Constants.Vision.kAprilTagFieldLayout.getTagPose(aprilTagID).orElse(new Pose3d(0, 0, 0, new Rotation3d()));
     }
 
     // Gets the distance to the closest april tag by finding the 3-dimensional norm
     private double getDistanceToAprilTag() {
         Pose3d aprilTagPose = getAprilTagPos(getClosestAprilTagID());
+        if (aprilTagPose == null) return 1000;
         return getDistanceBetweenPose3d(aprilTagPose, getCurrentPose3d());
     }
 
@@ -110,9 +119,16 @@ public class Limelight extends SubsystemBase{
         return Math.sqrt(xDifferenceSquared + yDifferenceSquared + zDifferenceSquared);
     }
 
+     // Returns the distance between two pose3d objects in three dimensions
+    private double getDistanceBetweenPose2d(Pose2d firstPose, Pose2d secondPose) {
+        double xDifferenceSquared = Math.pow(secondPose.getX() - firstPose.getX(), 2);
+        double yDifferenceSquared = Math.pow(secondPose.getY() - firstPose.getY(), 2);
+        return Math.sqrt(xDifferenceSquared + yDifferenceSquared);
+    }
+
     // Returns the rotation3d using values stored in the network table
     private Rotation3d getRotation3d() {
-        return new Rotation3d(limelightRoll, limelightPitch, limelightYaw);
+        return new Rotation3d(Math.toRadians(limelightRoll), Math.toRadians(limelightPitch), Math.toRadians(limelightYaw));
     }
 
     // Returns the rotation3d using values stored in the network table
@@ -122,18 +138,27 @@ public class Limelight extends SubsystemBase{
 
     // Adds vision measurements to the drivetrain if they are within the field
     public void addVisionFromDrivetrain() {
-        if (!isPoseValid()) return; 
+        // if (!isPoseValid()) return; 
         drivetrain.addVisionPoseEstimate(getCurrentPose3d(), getDistanceToAprilTag(), Timer.getFPGATimestamp() - (limelightTotalLatency/1000.0), calculateVisionStdDevs());
+    }
+
+    public boolean isEstimateClose() {
+        Pose2d currentPose = new Pose2d(limelightX, limelightY, Rotation2d.fromDegrees(0));
+        return getDistanceBetweenPose2d(currentPose, drivetrain.getPose()) < Constants.Vision.kMaxAccuracyRange;
     }
 
     // Sees if the robot's position as given by the limelight is within the field
     public boolean isPoseValid() {
-        boolean isInLowerXLimit = -2.5 < limelightX;
-        boolean isInUpperXLimit = limelightX < Constants.Vision.kAprilTagFieldLayout.getFieldLength() + 2.5;
-        boolean isInLowerYLimit = -2.5 < limelightY;
-        boolean isInUpperYLimit = limelightY < Constants.Vision.kAprilTagFieldLayout.getFieldWidth() + 2.5;
-        boolean isInLowerZLimit = 0 < limelightZ;
-        boolean isInUpperZLimit = limelightZ < Constants.Vision.limelightZHeight + 0.5;
-        return isInLowerXLimit && isInUpperXLimit && isInLowerYLimit && isInUpperYLimit && isInLowerZLimit && isInUpperZLimit;
+        boolean isInLowerXLimit = -2.5 <= limelightX;
+        boolean isInUpperXLimit = limelightX <= Constants.Vision.kAprilTagFieldLayout.getFieldLength() + 2.5;
+        boolean isInLowerYLimit = -2.5 <= limelightY;
+        boolean isInUpperYLimit = limelightY <= Constants.Vision.kAprilTagFieldLayout.getFieldWidth() + 2.5;
+        boolean isInLowerZLimit = 0 <= limelightZ;
+        boolean isInUpperZLimit = limelightZ <= Constants.Vision.limelightZHeight + 0.5;
+        return isInLowerXLimit && isInUpperXLimit && isInLowerYLimit && isInUpperYLimit && isInLowerZLimit && isInUpperZLimit && isEstimateClose();
+    }
+
+    public double getYaw() {
+        return this.limelightYaw;
     }
 }

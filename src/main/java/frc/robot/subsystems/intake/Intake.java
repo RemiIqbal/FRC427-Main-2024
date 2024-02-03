@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.util.IOUtils;
 
  /*
   * Notes about how Intake works
@@ -20,6 +19,14 @@ import frc.robot.util.IOUtils;
   */
 
 public class Intake extends SubsystemBase {
+
+    private static Intake instance; 
+    //  = new Intake();
+
+    public static Intake getInstance() {
+        return instance; 
+    }
+    
     // establishes the motors for shooter and sucker. Also establishes the beambreak.
     CANSparkMax m_intakeMotorShootTop = new CANSparkMax(Constants.IntakeConstants.kIntakeMotorShootTopId, MotorType.kBrushless);
     RelativeEncoder m_intakeEncoderShootTop = m_intakeMotorShootTop.getEncoder();
@@ -34,7 +41,7 @@ public class Intake extends SubsystemBase {
     DigitalInput m_BeamBreak = new DigitalInput(Constants.IntakeConstants.kBeamBreakId); 
 
     
-    public Intake() {
+    private Intake() {
         setupMotors();
     }
     public void setupMotors() {

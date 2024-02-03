@@ -19,11 +19,18 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveModule.DriveState;
 import frc.robot.util.ChassisState;
 import frc.robot.util.SwerveUtils;
 
 public class Drivetrain extends SubsystemBase {
+
+  private static Drivetrain instance = new Drivetrain();
+
+    public static Drivetrain getInstance() {
+        return instance; 
+    }
 
   // set up the four swerve modules  
   private SwerveModule frontLeft = new SwerveModule(Constants.DrivetrainConstants.frontLeft); 
@@ -49,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
   private Field2d m_odometryField = new Field2d(); 
   private Field2d m_visionField = new Field2d(); 
 
-  public Drivetrain() {
+  private Drivetrain() {
 
     this.rotationController.enableContinuousInput(-180, 180); 
 

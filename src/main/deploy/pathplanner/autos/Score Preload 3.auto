@@ -2,30 +2,24 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6576257764044353,
-      "y": 6.583896877066937
+      "x": 0.6884877930157377,
+      "y": 4.4852797475010595
     },
-    "rotation": 60.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Starting to Amp 1"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": null
+            "name": "ShootSpeaker"
           }
         }
       ]
     }
   },
-  "folder": "Archive",
+  "folder": "Score Preload",
   "choreoAuto": false
 }

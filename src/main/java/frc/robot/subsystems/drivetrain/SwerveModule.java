@@ -100,6 +100,8 @@ public class SwerveModule {
         SmartDashboard.putNumber(name + " Turn Vel (arb)", this.turnMotor.getEncoder().getVelocity());
         SmartDashboard.putNumber(name + " Drive Vel (m/s)", this.driveEncoder.getVelocity());
 
+        if (this.getReferenceState() != null) SmartDashboard.putNumber(name + "Commanded Drive Vel (m/s)", this.getReferenceState().speedMetersPerSecond); 
+
         SmartDashboard.putNumber(name + " Abs Turn Angle (degrees)", this.getAngle().getDegrees());
     }
 
@@ -109,7 +111,7 @@ public class SwerveModule {
         this.driveEncoder.setVelocityConversionFactor(Constants.DrivetrainConstants.kMetersPerSecondPerRPM); 
 
         final MagnetSensorConfigs config = new MagnetSensorConfigs(); 
-        config.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1; 
+        config.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf; 
         config.MagnetOffset = kAbsoluteOffset; 
         config.SensorDirection = direction; 
 

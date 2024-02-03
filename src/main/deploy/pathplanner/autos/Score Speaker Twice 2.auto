@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score Speaker"
+            "name": "ShootSpeaker"
           }
         },
         {
@@ -27,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "Note to Speaker 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
           }
         }
       ]

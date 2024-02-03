@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6576257764044353,
-      "y": 6.583896877066937
+      "x": 1.501187563778637,
+      "y": 1.61
     },
-    "rotation": 60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Starting to Amp 1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": null
+            "pathName": "Leave Auto"
           }
         }
       ]
     }
   },
-  "folder": "Archive",
+  "folder": "Leave Autos",
   "choreoAuto": false
 }

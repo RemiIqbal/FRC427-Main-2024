@@ -14,12 +14,15 @@
   ],
   "autoFolders": [
     "Archive",
-    "Two Piece Middle Fling",
+    "Leave Autos",
+    "3 piece auto",
+    "Score Preload",
     "Testing",
+    "Two Piece Middle Fling",
     "TwoPieceReturn"
   ],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxVel": 1.0,
+  "defaultMaxAccel": 1.0,
   "defaultMaxAngVel": 180.0,
   "defaultMaxAngAccel": 90.0,
   "maxModuleSpeed": 4.5

@@ -10,6 +10,14 @@ import frc.robot.Constants;
 import frc.robot.util.IOUtils;
 
 public class Hang extends SubsystemBase {
+
+    private static Hang instance; 
+    //  = new Hang();
+
+    public static Hang getInstance() {
+        return instance; 
+    }
+
     //Initializing velocity variable
     private double m_velocity = 0;
     
@@ -21,7 +29,7 @@ public class Hang extends SubsystemBase {
     private RelativeEncoder m_HangEncoderRight = m_HangMotorRight.getEncoder();
     private RelativeEncoder m_HangEncoderLeft = m_HangMotorLeft.getEncoder();
 
-    public Hang() {
+    private Hang() {
         setupMotors();
     }
 

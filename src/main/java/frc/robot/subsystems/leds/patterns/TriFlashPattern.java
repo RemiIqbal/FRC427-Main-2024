@@ -10,38 +10,40 @@ public class TriFlashPattern extends LEDPattern{
     Color color2;
     Color color3;
     private Timer timer = new Timer();
+    private double maxTime; 
     
     
 
     public TriFlashPattern(Color color1, Color color2, Color color3) {
-        this(color1, color2, color3, 1); 
+        this(color1, color2, color3, 5); 
         
     }
     
     public TriFlashPattern(Color color1, Color color2,Color color3, double time) {
-        super(time);
+        super(0);
+        this.maxTime = time;
         this.color1 = color1;
         this.color2 = color2;
         this.color3 = color3;
-        this.timer.start();
     }
 
      @Override
      
     protected void updateLEDs(AddressableLed buf, double time) {
-        Color decidedColor;
-        if (this.timer.get() < (time/3)) {
+        Color decidedColor = Color.kAliceBlue;
+        if (time< (this.maxTime/3)) {
             decidedColor = color1;
         }
 
-        else if (this.timer.get() > (time/3) && this.timer.get() < 2*time/3) {
+        else if (time > (time/3) && time < 2*this.maxTime/3) {
             decidedColor = color2;
         }
-        else {
+        else if (time >2*this.maxTime/3) {
           decidedColor = color3;
         }
         for (int i = 0; i < buf.getLength(); i++) {
             buf.setLED(i, decidedColor);
+            
 
         }
         
